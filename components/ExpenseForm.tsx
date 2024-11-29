@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import {
     Form,
-    DatePicker,
     Input,
     InputNumber,
     Select,
@@ -14,7 +13,6 @@ import {
 } from 'antd';
 import { UploadOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd/es/upload/interface';
-import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 import {db} from "@/db";
 import {expenses} from "@/db/schema";
@@ -33,7 +31,7 @@ const ExpenseForm: React.FC = () => {
         const formData = {
             id: uuidv4(),
             ...values,
-            dateTime: values.dateTime.toISOString(),
+            dateTime: new Date(values.dateTime).toISOString(),
             photos: fileList.map(file => file.response?.url || ''),
             createdAt: new Date().toISOString(),
         };
@@ -89,11 +87,13 @@ const ExpenseForm: React.FC = () => {
                 name="dateTime"
                 label="Date and Time"
                 rules={[{ required: true }]}
+                initialValue={new Date().toISOString().slice(0, 16)}
+                style={{ width: '100%' }}
             >
-                <DatePicker
-                    showTime
-                    style={{ width: '100%' }}
-                    format="YYYY-MM-DD HH:mm"
+                <input 
+                    type="datetime-local" 
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    style={{ fontSize: '20px', width: '100%' }}
                 />
             </Form.Item>
 

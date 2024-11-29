@@ -7,15 +7,25 @@
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Prevent zoom on focus for iOS devices */
+input,
+select,
+textarea {
+  font-size: 16px !important;
+  /* Prevent zoom on iOS */
+}
+
+/* Fix for Ant Design components */
+.ant-input,
+.ant-input-number-input,
+.ant-select-selection-search-input,
+.ant-picker-input > input {
+  font-size: 16px !important;
 }
