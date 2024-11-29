@@ -1,4 +1,5 @@
-
+// turn of static export
+export const dynamic = 'force-dynamic';
 // echo json from server
 import {db} from "@/db";
 import {getExpenses} from "@/server_actions/data";
