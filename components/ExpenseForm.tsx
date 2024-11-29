@@ -8,8 +8,10 @@ import {
   Upload,
   Button,
   message,
+  Carousel,
+  Modal,
 } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd/es/upload/interface';
 import dayjs from 'dayjs';
 
@@ -18,6 +20,9 @@ const { TextArea } = Input;
 const ExpenseForm: React.FC = () => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [carouselVisible, setCarouselVisible] = useState(false);
 
   const onFinish = async (values: any) => {
     const formData = {
@@ -47,9 +52,33 @@ const ExpenseForm: React.FC = () => {
     }
   };
 
-  const handleUploadChange = ({ fileList }: { fileList: UploadFile[] }) => {
-    setFileList(fileList);
+  const handleUploadChange = ({ fileList: newFileList }: { fileList: UploadFile[] }) => {
+    setFileList(newFileList);
   };
+
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj!);
+    }
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+  };
+
+  const getBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  };
+
+  const uploadButton = (
+    <div>
+      <UploadOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
 
   return (
     <Form
@@ -157,18 +186,78 @@ const ExpenseForm: React.FC = () => {
         <TextArea rows={2} />
       </Form.Item>
 
-      <Form.Item
-        label="Photos"
-      >
-        <Upload
-          action="/api/upload"
-          listType="picture"
-          multiple
-          onChange={handleUploadChange}
-          fileList={fileList}
+      <Form.Item label="Photos">
+        <div style={{ marginBottom: 16 }}>
+          <Upload
+            listType="picture-card"
+            multiple
+            onChange={handleUploadChange}
+            fileList={fileList}
+            onPreview={handlePreview}
+          >
+            {fileList.length >= 8 ? null : uploadButton}
+          </Upload>
+        </div>
+        
+        {fileList.length > 0 && (
+          <Button 
+            type="dashed" 
+            block 
+            onClick={() => setCarouselVisible(true)}
+            icon={<EyeOutlined />}
+          >
+            View Photos
+          </Button>
+        )}
+
+        <Modal
+          open={previewOpen}
+          title="Photo Preview"
+          footer={null}
+          onCancel={() => setPreviewOpen(false)}
         >
-          <Button icon={<UploadOutlined />}>Upload Photos</Button>
-        </Upload>
+          <img alt="preview" style={{ width: '100%' }} src={previewImage} />
+        </Modal>
+
+        <Modal
+          open={carouselVisible}
+          title="Photo Gallery"
+          footer={null}
+          width="90%"
+          style={{ maxWidth: '800px' }}
+          onCancel={() => setCarouselVisible(false)}
+        >
+          <Carousel
+            dots
+            autoplay={false}
+            style={{ 
+              backgroundColor: '#f0f0f0',
+              padding: '20px',
+              borderRadius: '8px'
+            }}
+          >
+            {fileList.map((file, index) => (
+              <div key={file.uid}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  minHeight: '300px'
+                }}>
+                  <img
+                    src={file.url || (file.preview as string)}
+                    alt={`photo-${index + 1}`}
+                    style={{
+                      maxWidth: '100%',
+                      maxHeight: '500px',
+                      objectFit: 'contain'
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </Carousel>
+        </Modal>
       </Form.Item>
 
       <Form.Item>
