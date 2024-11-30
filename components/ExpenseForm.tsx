@@ -27,14 +27,20 @@ const ExpenseForm: React.FC = () => {
     const [previewImage, setPreviewImage] = useState('');
     const [carouselVisible, setCarouselVisible] = useState(false);
 
+    const [isUploading, setUploading] = useState(false);
+
     const onFinish = async (values: any) => {
+        message.loading('Submitting expense...');
+        setUploading(true);
         const formData = {
             id: uuidv4(),
             ...values,
             dateTime: new Date(values.dateTime).toISOString(),
-            photos: fileList.map(file => file.response?.url || ''),
+            photos: await Promise.all(fileList.map(async file => await getBase64(file.originFileObj!))),
             createdAt: new Date().toISOString(),
         };
+
+        console.log('Form data:', formData);
 
         try {
             await createExpense(formData);
@@ -44,7 +50,10 @@ const ExpenseForm: React.FC = () => {
         } catch (error) {
             message.error('Failed to submit expense');
             console.error('Error submitting expense:', error);
+        } finally {
+            setUploading(false);
         }
+
     };
 
     const handleUploadChange = ({ fileList: newFileList }: { fileList: UploadFile[] }) => {
@@ -258,7 +267,7 @@ const ExpenseForm: React.FC = () => {
             </Form.Item>
 
             <Form.Item>
-                <Button type="primary" htmlType="submit" block>
+                <Button type="primary" htmlType="submit" block size={'large'} loading={isUploading}>
                     Save Expense
                 </Button>
             </Form.Item>

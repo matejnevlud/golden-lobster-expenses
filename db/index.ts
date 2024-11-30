@@ -2,7 +2,7 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schema';
 
-const connectionString = process.env.DATABASE_URL || "postgresql://postgres:hDCBjSUwxcnzpkgFVApjJkyVcWRTKpuF@autorack.proxy.rlwy.net:29914/railway";
+const connectionString = process.env.DATABASE_URL || "postgres://default:mWC7n1ZiDJNV@ep-dark-surf-a2sed0d3.eu-central-1.aws.neon.tech:5432/verceldb?sslmode=require";
 
 if (!connectionString) {
   throw new Error('DATABASE_URL is not defined');
