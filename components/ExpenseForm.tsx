@@ -129,8 +129,15 @@ const ExpenseForm: React.FC = () => {
             >
                 <InputNumber
                     style={{ width: '100%' }}
-                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    parser={value => value!.replace(/\$\s?|(,*)/g, '')}
+                    formatter={value => `OMR ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={(value: string | undefined) => {
+                        if (!value) return 0;
+                        const parsed = value.replace(/OMR\s?|(,*)/g, '');
+                        return Number(parsed);
+                    }}
+                    precision={3}  // OMR uses 3 decimal places for baisa
+                    step={0.001}   // Minimum step for baisa
+                    min={0}        // Prevent negative values
                 />
             </Form.Item>
 
@@ -142,7 +149,6 @@ const ExpenseForm: React.FC = () => {
                 <Select>
                     <Select.Option value="cash">Cash</Select.Option>
                     <Select.Option value="card">Card</Select.Option>
-                    <Select.Option value="transfer">Bank Transfer</Select.Option>
                 </Select>
             </Form.Item>
 
@@ -160,10 +166,11 @@ const ExpenseForm: React.FC = () => {
                 rules={[{ required: true }]}
             >
                 <Select>
-                    <Select.Option value="travel">Travel</Select.Option>
-                    <Select.Option value="meals">Meals</Select.Option>
-                    <Select.Option value="supplies">Supplies</Select.Option>
-                    <Select.Option value="services">Services</Select.Option>
+                    <Select.Option value="Direct">Direct</Select.Option>
+                    <Select.Option value="Indirect">Indirect</Select.Option>
+                    <Select.Option value="OOC">OOC</Select.Option>
+                    <Select.Option value="CAPEX">CAPEX</Select.Option>
+                    <Select.Option value="Fix">Fix</Select.Option>
                 </Select>
             </Form.Item>
 
