@@ -154,10 +154,21 @@ const ExpenseForm: React.FC = () => {
 
             <Form.Item
                 name="vat"
-                label="VAT (%)"
+                label="VAT (OMR)"
                 rules={[{ required: true }]}
             >
-                <InputNumber style={{ width: '100%' }} min={0} max={100} />
+                <InputNumber
+                    style={{ width: '100%' }}
+                    formatter={value => `OMR ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    parser={(value: string | undefined) => {
+                        if (!value) return 0;
+                        const parsed = value.replace(/OMR\s?|(,*)/g, '');
+                        return Number(parsed);
+                    }}
+                    precision={3}  // OMR uses 3 decimal places for baisa
+                    step={0.001}   // Minimum step for baisa
+                    min={0}        // Prevent negative values
+                />
             </Form.Item>
 
             <Form.Item
