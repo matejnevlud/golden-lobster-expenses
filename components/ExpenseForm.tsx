@@ -149,6 +149,7 @@ const ExpenseForm: React.FC = () => {
                 <Select>
                     <Select.Option value="cash">Cash</Select.Option>
                     <Select.Option value="card">Card</Select.Option>
+                    <Select.Option value="transfer">Bank Transfer</Select.Option>
                 </Select>
             </Form.Item>
 
