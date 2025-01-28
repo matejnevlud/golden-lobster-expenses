@@ -12,6 +12,7 @@ export const expenses = pgTable("expenses", {
   category2: text(),
   note1: text(),
   note2: text(),
+  reported: boolean().default(true),
   photos: text().array(),
   createdAt: timestamp("created_at", { mode: 'string' }).defaultNow(),
 });

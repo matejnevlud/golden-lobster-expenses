@@ -9,7 +9,7 @@ import {
     Button,
     message,
     Carousel,
-    Modal,
+    Modal, Radio,
 } from 'antd';
 import { UploadOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd/es/upload/interface';
@@ -209,6 +209,17 @@ const ExpenseForm: React.FC = () => {
                 label="Note 2"
             >
                 <TextArea rows={2} />
+            </Form.Item>
+
+            <Form.Item
+                name="reported"
+                label="Is Reported"
+                initialValue={true}
+            >
+                <Radio.Group>
+                    <Radio value={true} defaultChecked={true}>Yes</Radio>
+                    <Radio value={false}>No</Radio>
+                </Radio.Group>
             </Form.Item>
 
             <Form.Item label="Photos">
