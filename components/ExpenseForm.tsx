@@ -27,10 +27,13 @@ const ExpenseForm: React.FC = () => {
     const [previewImage, setPreviewImage] = useState('');
     const [carouselVisible, setCarouselVisible] = useState(false);
 
+    const [immidiatePriceValue, setImmidiatePriceValue] = useState(0);
+
     const [isUploading, setUploading] = useState(false);
 
     const onFinish = async (values: any) => {
         message.loading('Submitting expense...');
+
         setUploading(true);
         const formData = {
             id: uuidv4(),
@@ -124,22 +127,30 @@ const ExpenseForm: React.FC = () => {
 
             <Form.Item
                 name="price"
-                label="Price"
+                label="Price (OMR)"
                 rules={[{ required: true }]}
             >
                 <InputNumber
                     style={{ width: '100%' }}
-                    formatter={value => `OMR ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    //formatter={value => `OMR ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     parser={(value: string | undefined) => {
                         if (!value) return 0;
-                        const parsed = value.replace(/OMR\s?|(,*)/g, '');
+                        const parsed = value.replace(/,/g, '.');
                         return Number(parsed);
-                    }}
-                    precision={3}  // OMR uses 3 decimal places for baisa
-                    step={0.001}   // Minimum step for baisa
+                    }}  // Minimum step for baisa
                     min={0}        // Prevent negative values
+
+                    onChange={(value) => setImmidiatePriceValue(value as number)}
+                    inputMode={'decimal'}
                 />
+
             </Form.Item>
+            {immidiatePriceValue > 80 && (
+                <div className="bg-red-100 border border-red-400 text-red-700 mt-0 mb-4 px-4 py-3 rounded relative" role="alert">
+                    <p className="font-bold">Warning !!!</p>
+                    <p>Price value is greater than 80</p>
+                </div>
+            )}
 
             <Form.Item
                 name="paymentType"
@@ -160,16 +171,17 @@ const ExpenseForm: React.FC = () => {
             >
                 <InputNumber
                     style={{ width: '100%' }}
-                    formatter={value => `OMR ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    //formatter={value => `OMR ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                     parser={(value: string | undefined) => {
                         if (!value) return 0;
-                        const parsed = value.replace(/OMR\s?|(,*)/g, '');
+                        const parsed = value.replace(/,/g, '.');
                         return Number(parsed);
-                    }}
-                    precision={3}  // OMR uses 3 decimal places for baisa
-                    step={0.001}   // Minimum step for baisa
+                    }}  // Minimum step for baisa
                     min={0}        // Prevent negative values
+                    inputMode={'decimal'}
+
                 />
+
             </Form.Item>
 
             <Form.Item
@@ -294,6 +306,15 @@ const ExpenseForm: React.FC = () => {
                         ))}
                     </Carousel>
                 </Modal>
+            </Form.Item>
+            <Form.Item>
+                {/* Show ERROR banner, if price value is greater then 80*/}
+                {immidiatePriceValue > 80 && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <p className="font-bold">Warning !!!</p>
+                        <p>Price value is greater than 80</p>
+                    </div>
+                )}
             </Form.Item>
 
             <Form.Item>

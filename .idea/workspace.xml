@@ -7,8 +7,6 @@
     <list default="true" id="cbe99b28-1885-4954-9a43-6f19085fecbf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/ExpenseForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ExpenseForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/schema.ts" beforeDir="false" afterPath="$PROJECT_DIR$/db/schema.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/drizzle/schema.ts" beforeDir="false" afterPath="$PROJECT_DIR$/drizzle/schema.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,6 +75,7 @@
       <workItem from="1737015126633" duration="37000" />
       <workItem from="1737042422200" duration="8000" />
       <workItem from="1738087718426" duration="1246000" />
+      <workItem from="1741939855157" duration="1612000" />
     </task>
     <servers />
   </component>
