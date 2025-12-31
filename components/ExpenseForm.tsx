@@ -242,6 +242,7 @@ const ExpenseForm: React.FC = () => {
                         onChange={handleUploadChange}
                         fileList={fileList}
                         onPreview={handlePreview}
+                        beforeUpload={() => false}
                     >
                         {fileList.length >= 8 ? null : uploadButton}
                     </Upload>
